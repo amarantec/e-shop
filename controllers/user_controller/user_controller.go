@@ -1,6 +1,6 @@
 package usercontroller
 
-import userservice "github.com/amarantec/project777/services/user_service"
+import userservice "github.com/amarantec/e-shop/services/user_service"
 
 type UserController struct {
 	service userservice.UserService
