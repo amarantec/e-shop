@@ -1,17 +1,28 @@
 package main
 
 import (
-	"github.com/amarantec/project777/config/database"
-	"github.com/amarantec/project777/routes"
+	"log"
+
+	"github.com/amarantec/e-shop/config/database"
+	"github.com/amarantec/e-shop/routes"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	r := gin.Default()
-
+	loadEnv()
 	database.ConnectDatabase()
 
-	routes.SetupRoutes()
+	r := gin.Default()
+
+	routes.SetupRoutes(r)
 
 	r.Run(":8080")
+}
+
+func loadEnv() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("error loading .env file")
+	}
 }
