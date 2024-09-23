@@ -1,9 +1,9 @@
 package routes
 
 import (
-	usercontroller "github.com/amarantec/project777/controllers/user_controller"
-	userrepository "github.com/amarantec/project777/repositories/user_repository"
-	userservice "github.com/amarantec/project777/services/user_service"
+	usercontroller "github.com/amarantec/e-shop/controllers/user_controller"
+	userrepository "github.com/amarantec/e-shop/repositories/user_repository"
+	userservice "github.com/amarantec/e-shop/services/user_service"
 )
 
 var userRepo = userrepository.NewUserRepository()
