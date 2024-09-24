@@ -12,4 +12,13 @@ func SetupRoutes(r *gin.Engine) {
 		userGroup.POST("/login", userCtrl.Login)
 		userGroup.POST("/change-password/:password", middleware.Auth, userCtrl.ChangePassword)
 	}
+
+	authenticated := r.Group("/address")
+
+	authenticated.POST("/insert-address", middleware.Auth, addressCtrl.InsertAddress)
+	authenticated.DELETE("/delete-address/:addressId", middleware.Auth, addressCtrl.DeleteAddress)
+	authenticated.GET("/list-addresses", middleware.Auth, addressCtrl.ListAddresses)
+	authenticated.GET("/get-address/:addressId", middleware.Auth, addressCtrl.GetAddress)
+	authenticated.PUT("/update-address", middleware.Auth, addressCtrl.UpdateAddress)
+
 }
