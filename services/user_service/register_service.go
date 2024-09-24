@@ -5,9 +5,10 @@ import (
 
 	"github.com/amarantec/e-shop/models"
 	usermodel "github.com/amarantec/e-shop/models/user_model"
+	"github.com/amarantec/e-shop/utils"
 )
 
-func (s *userService) Register(ctx context.Context, user *usermodel.User) (models.Response[uint], error) {
+func (s *userService) SaveUser(ctx context.Context, user *usermodel.User) (models.Response[uint], error) {
 	response := models.Response[uint]{}
 
 	if validName, err := validUserName(user.Name); err != nil || !validName {
@@ -25,7 +26,16 @@ func (s *userService) Register(ctx context.Context, user *usermodel.User) (model
 		return response, ErrUserPasswordInvalidFormat
 	}
 
-	response, err := s.userRepo.Register(ctx, user)
+	hashedPassword, err := utils.HashPassword(user.Password)
+	if err != nil {
+		response.Success = false
+		response.Message = "error when hashing password"
+		return response, err
+	}
+
+	user.Password = hashedPassword
+
+	response, err = s.userRepo.SaveUser(ctx, user)
 	if err != nil {
 		response.Success = false
 		return response, err
