@@ -2,7 +2,6 @@ package userservice
 
 import (
 	"context"
-	"log"
 
 	"github.com/amarantec/e-shop/models"
 	usermodel "github.com/amarantec/e-shop/models/user_model"
@@ -31,7 +30,6 @@ func (s *userService) Login(ctx context.Context, user *usermodel.Authenticate) (
 	passwordIsValid :=
 		utils.CheckPassword(user.Password, userRetrivied.Password)
 	if !passwordIsValid {
-		log.Printf(err.Error())
 		response.Success = false
 		response.Message = "Wrong password"
 		return response, nil
