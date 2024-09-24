@@ -16,10 +16,13 @@ var ErrUserEmailInvalidFormat = errors.New("user email must contain @ and .com")
 var ErrUserPasswordInvalidFormat = errors.New("password must contains 8 or more digits")
 var ErrUserEmailEmpty = errors.New("user email is empty")
 var ErrUserPasswordEmpty = errors.New("user password is empty")
+var ErrUserIdEmpty = errors.New("user id is empty")
+var ErrUserNotFound = errors.New("user not found")
 
 type UserService interface {
-	Register(ctx context.Context, user *usermodel.User) (models.Response[uint], error)
-	FindUser(ctctx context.Context, user *usermodel.Authenticate) (models.Response[uint], error)
+	SaveUser(ctx context.Context, user *usermodel.User) (models.Response[uint], error)
+	Login(ctctx context.Context, user *usermodel.Authenticate) (models.Response[uint], error)
+	ChangeUserPassword(ctx context.Context, userId uint, password string) (models.Response[bool], error)
 }
 
 type userService struct {
