@@ -9,7 +9,7 @@ import (
 	"github.com/amarantec/e-shop/utils"
 )
 
-func (s *userService) FindUser(ctx context.Context, user *usermodel.Authenticate) (models.Response[uint], error) {
+func (s *userService) Login(ctx context.Context, user *usermodel.Authenticate) (models.Response[uint], error) {
 	response := models.Response[uint]{}
 
 	if validEmail, err := validUserEmail(user.Email); err != nil || !validEmail {
@@ -22,22 +22,22 @@ func (s *userService) FindUser(ctx context.Context, user *usermodel.Authenticate
 		return response, ErrUserPasswordInvalidFormat
 	}
 
-	u, err := s.userRepo.FindUser(ctx, user.Email)
+	userRetrivied, err := s.userRepo.FindUserByEmail(ctx, user.Email)
 	if err != nil {
 		response.Success = false
 		return response, err
 	}
 
 	passwordIsValid :=
-		utils.CheckPassword(user.Password, u.Password)
+		utils.CheckPassword(user.Password, userRetrivied.Password)
 	if !passwordIsValid {
-		log.Printf("user repository: wrong password ")
+		log.Printf(err.Error())
 		response.Success = false
 		response.Message = "Wrong password"
 		return response, nil
 	}
 
-	response.Data = u.ID
+	response.Data = userRetrivied.ID
 	response.Success = true
 	response.Message = "Successfull login"
 
