@@ -12,7 +12,7 @@ func (r *userRepository) SaveUser(ctx context.Context, user *usermodel.User) (mo
 	response := models.Response[uint]{}
 
 	if err := database.DB.WithContext(ctx).
-		Create(user).Error; err != nil {
+		Create(&user).Error; err != nil {
 		response.Success = false
 		return response, err
 	}
