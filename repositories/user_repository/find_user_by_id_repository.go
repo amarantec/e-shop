@@ -10,20 +10,18 @@ import (
 	"gorm.io/gorm"
 )
 
-func (r *userRepository) FindUser(ctx context.Context, email string) (usermodel.User, error) {
+func (r *userRepository) FindUserById(ctx context.Context, userId uint) (usermodel.User, error) {
 	userScan := usermodel.User{}
 
 	if err :=
 		database.DB.WithContext(ctx).
-			Model(&usermodel.User{}).
-			Select("id, password").
-			Where("email = ?", email).
-			Scan(&userScan).Error; err != nil {
+			Where("id = ?", userId).
+			First(&userScan).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			log.Printf("user repository: user not found -> %v", err)
 			return userScan, nil
 		}
-		log.Printf("user respository error: %v", err)
+		log.Printf("user repository error: %v", err)
 		return userScan, err
 	}
 
