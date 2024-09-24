@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	addressmodel "github.com/amarantec/e-shop/models/address_model"
 	usermodel "github.com/amarantec/e-shop/models/user_model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -28,5 +29,6 @@ func ConnectDatabase() {
 
 	DB.AutoMigrate(
 		&usermodel.User{},
+		&addressmodel.Address{},
 	)
 }
