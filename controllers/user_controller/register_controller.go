@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (ctrl *UserController) Register(c *gin.Context) {
+func (ctrl *UserController) SaveUser(c *gin.Context) {
 	var newUser usermodel.User
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -19,7 +19,7 @@ func (ctrl *UserController) Register(c *gin.Context) {
 		return
 	}
 
-	res, err := ctrl.service.Register(ctxTimeout, &newUser)
+	res, err := ctrl.service.SaveUser(ctxTimeout, &newUser)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{"error": "could not register user"})
