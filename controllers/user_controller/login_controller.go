@@ -20,14 +20,14 @@ func (ctrl *UserController) Login(c *gin.Context) {
 		return
 	}
 
-	res, err := ctrl.service.FindUser(ctxTimeout, &user)
+	res, err := ctrl.service.Login(ctxTimeout, &user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{"error": "could not validate user credentials"})
 		return
 	}
 
-	token, err := utils.GenerateUserToken(res.Data, user.Email)
+	token, err := utils.GenerateToken(res.Data, user.Email)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{"error": "could not generate user token"})
