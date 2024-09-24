@@ -7,15 +7,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func JWTAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		err := utils.ValidateUserToken(c)
-		if err != nil {
-			c.JSON(http.StatusUnauthorized,
-				gin.H{"error": "authentication required"})
-			c.Abort()
-			return
-		}
-		c.Next()
+const UserIdTOKEN = "UserId"
+
+func Auth(c *gin.Context) {
+	token := c.Request.Header.Get("Authorization")
+	if token == "" {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "token is empty"})
+		return
 	}
+
+	userId, err := utils.VerifyToken(token)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Not authorized"})
+		return
+	}
+
+	c.Set(UserIdTOKEN, userId)
+	c.Next()
 }
