@@ -13,8 +13,8 @@ import (
 func (r *productRepository) DeleteProduct(ctx context.Context, productId uint) (models.Response[bool], error) {
 	response := models.Response[bool]{}
 
-	if err := database.DB.WithContext(ctx).Where("id = ?", productId).
-		Delete(&productmodel.Product{}).Error; err != nil {
+	if err := database.DB.Unscoped().WithContext(ctx).
+		Delete(&productmodel.Product{}, productId).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.Message = "Product not found"
 			return response, nil

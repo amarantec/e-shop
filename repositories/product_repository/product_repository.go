@@ -14,6 +14,8 @@ type ProductRepository interface {
 	GetProduct(ctx context.Context, productId uint) (models.Response[productmodel.Product], error)
 	ListProducts(ctx context.Context) (models.Response[[]productmodel.Product], error)
 	ListProductsByCategory(ctx context.Context, categoryUrl string) (models.Response[[]productmodel.Product], error)
+	UpdateProduct(ctx context.Context, product productmodel.Product) (models.Response[bool], error)
+	SearchProducts(ctx context.Context, searchText string) (models.Response[[]productmodel.Product], error)
 }
 
 type productRepository struct{}

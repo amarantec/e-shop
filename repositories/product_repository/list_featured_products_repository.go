@@ -11,17 +11,31 @@ import (
 func (r *productRepository) ListFeaturedProducts(ctx context.Context) (models.Response[[]productmodel.Product], error) {
 	response := models.Response[[]productmodel.Product]{}
 
-	result :=
+	if err :=
 		database.DB.WithContext(ctx).
-			Model(&productmodel.Product{}).
-			Preload("ProductVariants", "visible = ? AND deleted = ?", true, false).
-			Preload("Images").
-			Where("featured = ? AND visible = ? AND deleted = ?", true, true, false).Find(&response.Data)
-
-	if result.Error != nil {
+			Table("products AS p").
+			Select(`p.id,
+				p.title,
+				p.description,
+				p.image_url,
+				p.category_id,
+				c.id,
+				c.name,
+				c.url,
+				pv.product_id,
+				pv.product_types_id,
+				pv.price,
+				COALESCE(pv.original_price, 0.0) AS original_price,
+				pt.id,
+				pt.name`).
+			Joins("JOIN categories AS c ON p.category_id = c.id").
+			Joins("LEFT JOIN product_variants AS pv ON p.id = pv.product_id").
+			Joins("LEFT JOIN product_types AS pt ON pv.product_types_id = pt.id").
+			Where("featured = ?", true).
+			Scan(&response.Data).Error; err != nil {
 		response.Success = false
 		response.Message = "error when get featured products"
-		return response, result.Error
+		return response, err
 	}
 
 	response.Success = true
