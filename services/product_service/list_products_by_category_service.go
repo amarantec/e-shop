@@ -25,6 +25,10 @@ func (s *productService) ListProductsByCategory(ctx context.Context, categoryUrl
 	for _, product := range rows.Data {
 		if product.Category.URL == categoryUrl {
 			filteredRows = append(filteredRows, product)
+		} else {
+			filteredRows = append(filteredRows, productmodel.Product{})
+			response.Success = true
+			response.Message = "no products related to the specified category"
 		}
 	}
 
