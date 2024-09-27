@@ -20,6 +20,6 @@ func (r *productRepository) CreateProduct(ctx context.Context, product productmo
 
 	response.Data = product
 	response.Success = true
-	response.Message = "Address registred successfully"
+	response.Message = "Product registred successfully"
 	return response, nil
 }
