@@ -21,4 +21,15 @@ func SetupRoutes(r *gin.Engine) {
 	authenticated.GET("/get-address/:addressId", middleware.Auth, addressCtrl.GetAddress)
 	authenticated.PUT("/update-address", middleware.Auth, addressCtrl.UpdateAddress)
 
+	productGroup := r.Group("/products")
+	{
+		productGroup.POST("/create-product", productCtrl.CreateProduct)
+		productGroup.GET("/get-product/:productId", productCtrl.GetProduct)
+		productGroup.GET("/list-products", productCtrl.ListProducts)
+		productGroup.GET("/list-featured-products", productCtrl.ListFeaturedProducts)
+		productGroup.GET("/list-products-by-category/:categoryUrl", productCtrl.ListProductsByCategory)
+		productGroup.GET("/search-products/:searchText", productCtrl.SearchProducts)
+		productGroup.DELETE("/delete-product/:productId", productCtrl.DeleteProduct)
+		productGroup.PUT("/update-product/:productId", productCtrl.UpdateProduct)
+	}
 }
