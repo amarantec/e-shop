@@ -11,11 +11,6 @@ import (
 func (r *productRepository) CreateProduct(ctx context.Context, product productmodel.Product) (models.Response[productmodel.Product], error) {
 	response := models.Response[productmodel.Product]{}
 
-	// passar para o service
-	for _, v := range product.ProductVariants {
-		v.ProductTypes = productmodel.ProductTypes{}
-	}
-
 	if err := database.DB.WithContext(ctx).
 		Create(&product).Error; err != nil {
 		response.Success = false
