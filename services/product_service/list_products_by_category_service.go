@@ -13,14 +13,21 @@ func (s *productService) ListProductsByCategory(ctx context.Context, categoryUrl
 	if categoryUrl == "" {
 		response.Success = false
 		return response, ErrProductCategoryUrlEmpty
-
-
 	}
-	
-	response, err := s.productRepo.ListProductsByCategory(ctx, categoryUrl)
+
+	rows, err := s.productRepo.ListProductsByCategory(ctx, categoryUrl)
 	if err != nil {
 		response.Success = false
 		return response, err
 	}
+
+	filteredRows := []productmodel.Product{}
+	for _, product := range rows.Data {
+		if product.Category.URL == categoryUrl {
+			filteredRows = append(filteredRows, product)
+		}
+	}
+
+	response.Data = filteredRows
 	return response, nil
 }
