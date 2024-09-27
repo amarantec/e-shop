@@ -14,29 +14,15 @@ func (r *productRepository) SearchProducts(ctx context.Context, searchText strin
 
 	if err :=
 		database.DB.WithContext(ctx).
-			Table("products AS p").
-			Select(`p.id,
-				p.title,
-				p.description,
-				p.image_url,
-				p.category_id,
-				c.id,
-				c.name,
-				c.url,
-				pv.product_id,
-				pv.product_types_id,
-				pv.price,
-				COALESCE(pv.original_price, 0.0) AS original_price,
-				pt.id,
-				pt.name`).
-			Joins("JOIN categories AS c ON p.category_id = c.id").
-			Joins("LEFT JOIN product_variants AS pv ON p.id = pv.product_id").
-			Joins("LEFT JOIN product_types AS pt ON pv.product_types_id = pt.id").
+			Model(productmodel.Product{}).
+			Preload("Category").                     // Precarregar a categoria associada
+			Preload("ProductVariants.ProductTypes"). // Precarregar as variantes do produto
+			Preload("Images").
 			Where("LOWER(title) LIKE ? OR LOWER(description) LIKE ?", strings.ToLower("%"+searchText+"%"),
 				strings.ToLower("%"+searchText+"%")).
-			Scan(&response.Data).Error; err != nil {
+			Find(&response.Data).Error; err != nil {
 		response.Success = false
-		response.Message = "error when get featured products"
+		response.Message = "error when searchs products"
 		return response, err
 	}
 	response.Success = true

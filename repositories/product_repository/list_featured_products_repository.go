@@ -11,34 +11,19 @@ import (
 func (r *productRepository) ListFeaturedProducts(ctx context.Context) (models.Response[[]productmodel.Product], error) {
 	response := models.Response[[]productmodel.Product]{}
 
-	if err :=
-		database.DB.WithContext(ctx).
-			Table("products AS p").
-			Select(`p.id,
-				p.title,
-				p.description,
-				p.image_url,
-				p.category_id,
-				c.id,
-				c.name,
-				c.url,
-				pv.product_id,
-				pv.product_types_id,
-				pv.price,
-				COALESCE(pv.original_price, 0.0) AS original_price,
-				pt.id,
-				pt.name`).
-			Joins("JOIN categories AS c ON p.category_id = c.id").
-			Joins("LEFT JOIN product_variants AS pv ON p.id = pv.product_id").
-			Joins("LEFT JOIN product_types AS pt ON pv.product_types_id = pt.id").
-			Where("featured = ?", true).
-			Scan(&response.Data).Error; err != nil {
+	if err := database.DB.WithContext(ctx).
+		Model(productmodel.Product{}).
+		Preload("Category").                     // Precarregar a categoria associada
+		Preload("ProductVariants.ProductTypes"). // Precarregar as variantes do produto
+		Preload("Images").                       // Precarregar as imagens do produto
+		Where("featured = ?", true).
+		Find(&response.Data).Error; err != nil {
 		response.Success = false
-		response.Message = "error when get featured products"
+		response.Message = "error when getting products"
 		return response, err
 	}
 
 	response.Success = true
-	response.Message = "Featured products retrivied successfully"
+	response.Message = "Products retrieved successfully"
 	return response, nil
 }
