@@ -2,7 +2,6 @@ package addressrepository
 
 import (
 	"context"
-	"log"
 
 	"github.com/amarantec/e-shop/config/database"
 	"github.com/amarantec/e-shop/models"
@@ -13,7 +12,6 @@ func (r *addressRepository) InsertAddress(ctx context.Context, address addressmo
 	response := models.Response[addressmodel.Address]{}
 	if err := database.DB.WithContext(ctx).
 		Create(&address).Error; err != nil {
-		log.Printf("address repo error: %v", err)
 		response.Success = false
 		response.Message = "error when create address register"
 		return response, err
