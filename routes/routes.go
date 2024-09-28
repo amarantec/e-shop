@@ -32,4 +32,11 @@ func SetupRoutes(r *gin.Engine) {
 		productGroup.DELETE("/delete-product/:productId", productCtrl.DeleteProduct)
 		productGroup.PUT("/update-product/:productId", productCtrl.UpdateProduct)
 	}
+
+	productTypesGroup := r.Group("/product-types")
+	{
+		productTypesGroup.POST("/add-product-type", productTypeCtrl.AddProductTypes)
+		productTypesGroup.GET("/list-product-types", productTypeCtrl.ListProductTypes)
+		productTypesGroup.PUT("/update-product-type/:productTypeId", productTypeCtrl.UpdateProductType)
+	}
 }
