@@ -3,6 +3,7 @@ package addresscontroller
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/amarantec/e-shop/middleware"
@@ -12,20 +13,30 @@ import (
 
 func (ctrl *AddressController) UpdateAddress(c *gin.Context) {
 	userId := c.GetUint(middleware.UserIdTOKEN)
-	newAddress := addressmodel.Address{
+	updateAddress := addressmodel.Address{
 		UserId: userId,
 	}
 
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	if err := c.ShouldBindJSON(&newAddress); err != nil {
+	addressIdStr := c.Param("addressId")
+	addressId, err := strconv.Atoi(addressIdStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest,
+			gin.H{"error": "invalid parameter"})
+		return
+	}
+
+	updateAddress.ID = uint(addressId)
+
+	if err := c.ShouldBindJSON(&updateAddress); err != nil {
 		c.JSON(http.StatusBadRequest,
 			gin.H{"error": "could not parse this request"})
 		return
 	}
 
-	res, err := ctrl.service.UpdateAddress(ctxTimeout, newAddress)
+	res, err := ctrl.service.UpdateAddress(ctxTimeout, updateAddress)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{"error": "could not update this address"})

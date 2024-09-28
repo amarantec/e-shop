@@ -3,7 +3,6 @@ package addresscontroller
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -18,7 +17,6 @@ func (ctrl *AddressController) InsertAddress(c *gin.Context) {
 
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	log.Print("user id: %d", userId)
 
 	if err := c.ShouldBindJSON(&newAddress); err != nil {
 		c.JSON(http.StatusBadRequest,
