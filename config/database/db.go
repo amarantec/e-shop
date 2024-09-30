@@ -5,6 +5,7 @@ import (
 	"os"
 
 	addressmodel "github.com/amarantec/e-shop/models/address_model"
+	cartmodel "github.com/amarantec/e-shop/models/cart_model"
 	categorymodel "github.com/amarantec/e-shop/models/category_model"
 	imagemodel "github.com/amarantec/e-shop/models/image_model"
 	productmodel "github.com/amarantec/e-shop/models/product_model"
@@ -41,5 +42,6 @@ func ConnectDatabase() {
 		&productmodel.ProductTypes{},
 		&productmodel.ProductVariants{},
 		&imagemodel.Images{},
+		&cartmodel.CartItems{},
 	)
 }
