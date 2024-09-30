@@ -13,13 +13,14 @@ func SetupRoutes(r *gin.Engine) {
 		userGroup.POST("/change-password/:password", middleware.Auth, userCtrl.ChangePassword)
 	}
 
-	authenticated := r.Group("/address")
-
-	authenticated.POST("/insert-address", middleware.Auth, addressCtrl.InsertAddress)
-	authenticated.DELETE("/delete-address/:addressId", middleware.Auth, addressCtrl.DeleteAddress)
-	authenticated.GET("/list-addresses", middleware.Auth, addressCtrl.ListAddresses)
-	authenticated.GET("/get-address/:addressId", middleware.Auth, addressCtrl.GetAddress)
-	authenticated.PUT("/update-address", middleware.Auth, addressCtrl.UpdateAddress)
+	addressGroup := r.Group("/address")
+	{
+		addressGroup.POST("/insert-address", middleware.Auth, addressCtrl.InsertAddress)
+		addressGroup.DELETE("/delete-address/:addressId", middleware.Auth, addressCtrl.DeleteAddress)
+		addressGroup.GET("/list-addresses", middleware.Auth, addressCtrl.ListAddresses)
+		addressGroup.GET("/get-address/:addressId", middleware.Auth, addressCtrl.GetAddress)
+		addressGroup.PUT("/update-address", middleware.Auth, addressCtrl.UpdateAddress)
+	}
 
 	productGroup := r.Group("/products")
 	{
@@ -38,5 +39,14 @@ func SetupRoutes(r *gin.Engine) {
 		productTypesGroup.POST("/add-product-type", productTypeCtrl.AddProductTypes)
 		productTypesGroup.GET("/list-product-types", productTypeCtrl.ListProductTypes)
 		productTypesGroup.PUT("/update-product-type/:productTypeId", productTypeCtrl.UpdateProductType)
+	}
+
+	cartItemsGroup := r.Group("/cart")
+	{
+		cartItemsGroup.POST("/store-cart-items", middleware.Auth, cartCtrl.StoreCartItems)
+		cartItemsGroup.GET("/get-cart-product", middleware.Auth, cartCtrl.GetCartProduct)
+		cartItemsGroup.GET("/get-cart-items-count", middleware.Auth, cartCtrl.GetCartItemsCount)
+		cartItemsGroup.DELETE("/remove-item-from-cart/:productId/:productTypesId", middleware.Auth, cartCtrl.RemoveItemFromCart)
+		cartItemsGroup.PUT("/update-quantity/:productId/:productTypeId/:quantity", middleware.Auth, cartCtrl.UpdateQuantity)
 	}
 }
