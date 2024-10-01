@@ -14,8 +14,9 @@ func (r *addressRepository) DeleteAddress(ctx context.Context, userId, addressId
 	response := models.Response[bool]{}
 
 	if err :=
-		database.DB.WithContext(ctx).Where("user_id = ? AND id = ?", userId, addressId).
-			Delete(&addressmodel.Address{}).Error; err != nil {
+		database.DB.WithContext(ctx).
+			Where("user_id = ? AND id = ?", userId, addressId).
+			Unscoped().Delete(&addressmodel.Address{}).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.Message = "Product not found"
 			return response, nil
