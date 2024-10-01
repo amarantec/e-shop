@@ -22,6 +22,15 @@ func SetupRoutes(r *gin.Engine) {
 		addressGroup.PUT("/update-address", middleware.Auth, addressCtrl.UpdateAddress)
 	}
 
+	categoryGroup := r.Group("/category")
+	{
+		categoryGroup.POST("insert-category", categoryCtrl.InsertCategory)
+		categoryGroup.GET("/list-categories", categoryCtrl.ListCategories)
+		categoryGroup.GET("/get-category/:categoryId", categoryCtrl.GetCategory)
+		categoryGroup.PUT("/update-category/:categoryId", categoryCtrl.UpdateCategory)
+		categoryGroup.DELETE("/delete-category/:categoryId", categoryCtrl.DeleteCategory)
+	}
+
 	productGroup := r.Group("/products")
 	{
 		productGroup.POST("/create-product", productCtrl.CreateProduct)
