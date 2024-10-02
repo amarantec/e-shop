@@ -8,6 +8,7 @@ import (
 	cartmodel "github.com/amarantec/e-shop/models/cart_model"
 	categorymodel "github.com/amarantec/e-shop/models/category_model"
 	imagemodel "github.com/amarantec/e-shop/models/image_model"
+	ordermodel "github.com/amarantec/e-shop/models/order_model"
 	productmodel "github.com/amarantec/e-shop/models/product_model"
 	usermodel "github.com/amarantec/e-shop/models/user_model"
 	"gorm.io/driver/postgres"
@@ -43,5 +44,7 @@ func ConnectDatabase() {
 		&productmodel.ProductVariants{},
 		&imagemodel.Images{},
 		&cartmodel.CartItems{},
+		&ordermodel.Orders{},
+		&ordermodel.OrderItems{},
 	)
 }

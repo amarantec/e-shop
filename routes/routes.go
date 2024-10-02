@@ -58,4 +58,11 @@ func SetupRoutes(r *gin.Engine) {
 		cartItemsGroup.DELETE("/remove-item-from-cart/:productId/:productTypesId", middleware.Auth, cartCtrl.RemoveItemFromCart)
 		cartItemsGroup.PUT("/update-quantity/:productId/:productTypeId/:quantity", middleware.Auth, cartCtrl.UpdateQuantity)
 	}
+
+	orderGroup := r.Group("/order")
+	{
+		orderGroup.POST("/place-order", middleware.Auth, orderCtrl.PlaceOrder)
+		orderGroup.GET("/get-orders", middleware.Auth, orderCtrl.GetOrders)
+		orderGroup.GET("/get-order-details/:orderId", middleware.Auth, orderCtrl.GetOrderDetails)
+	}
 }
