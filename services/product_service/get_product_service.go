@@ -15,11 +15,13 @@ func (s *productService) GetProduct(ctx context.Context, productId uint) (models
 		return response, ErrProductIdEmpty
 	}
 
-	response, err := s.productRepo.GetProduct(ctx, productId)
+	product, err := s.productRepo.GetProduct(ctx, productId)
 	if err != nil {
 		response.Success = false
 		return response, err
 	}
 
+	response.Data = product
+	response.Success = true
 	return response, nil
 }
