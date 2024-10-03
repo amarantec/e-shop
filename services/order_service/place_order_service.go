@@ -2,39 +2,34 @@ package orderservice
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/amarantec/e-shop/models"
 	ordermodel "github.com/amarantec/e-shop/models/order_model"
 	cartrepository "github.com/amarantec/e-shop/repositories/cart_repository"
+	productrepository "github.com/amarantec/e-shop/repositories/product_repository"
 )
 
 func (s orderService) PlaceOrder(ctx context.Context, userId uint) (models.Response[bool], error) {
 	response := models.Response[bool]{}
-	products, err := cartrepository.NewCartItemsRepository().ListCartItems(ctx, userId)
+	cartItems, err := cartrepository.NewCartItemsRepository().GetCartProducts(ctx, userId)
 	if err != nil {
-		log.Printf("place order error: %v", err)
-		response.Message = "could not get list of items"
 		return response, err
 	}
 
-	totalPrice := 0.0
-	for _, item := range products.Data {
-		totalPrice += (item.Price * float64(item.Quantity))
-	}
-
 	orderItems := []ordermodel.OrderItems{}
-
-	for _, item := range products.Data {
-		oi := ordermodel.OrderItems{}
-
-		oi.ProductID = item.ProductID
-		oi.ProductTypesID = item.ProductTypesID
-		oi.Quantity = item.Quantity
-		oi.TotalPrice = item.Price * float64(item.Quantity)
-
-		orderItems = append(orderItems, oi)
+	totalPrice := 0.0
+	for _, item := range cartItems {
+		product, _ := productrepository.NewProductRepository().GetProduct(ctx, item.ProductID)
+		for _, v := range product.ProductVariants {
+			totalPrice += (v.Price * float64(item.Quantity))
+			oi := ordermodel.OrderItems{}
+			oi.ProductID = item.ProductID
+			oi.ProductTypesID = item.ProductTypesID
+			oi.Quantity = item.Quantity
+			oi.TotalPrice = v.Price * float64(item.Quantity)
+			orderItems = append(orderItems, oi)
+		}
 	}
 
 	order := ordermodel.Orders{
