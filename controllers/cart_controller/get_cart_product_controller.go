@@ -15,7 +15,7 @@ func (ctrl *CartController) GetCartProduct(c *gin.Context) {
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	res, err := ctrl.service.GetCartProduct(ctxTimeout, userId)
+	res, err := ctrl.service.GetCartProducts(ctxTimeout, userId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			gin.H{"error": "could not get cart items count"})
