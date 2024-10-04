@@ -11,6 +11,7 @@ import (
 	ordermodel "github.com/amarantec/e-shop/models/order_model"
 	productmodel "github.com/amarantec/e-shop/models/product_model"
 	usermodel "github.com/amarantec/e-shop/models/user_model"
+	wishlistmodel "github.com/amarantec/e-shop/models/wishlist_model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -46,5 +47,6 @@ func ConnectDatabase() {
 		&cartmodel.CartItems{},
 		&ordermodel.Orders{},
 		&ordermodel.OrderItems{},
+		&wishlistmodel.WishList{},
 	)
 }
