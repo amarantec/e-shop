@@ -59,6 +59,14 @@ func SetupRoutes(r *gin.Engine) {
 		cartItemsGroup.PUT("/update-quantity/:productId/:productTypeId/:quantity", middleware.Auth, cartCtrl.UpdateQuantity)
 	}
 
+	wishListGroup := r.Group("/wish-list")
+	{
+		wishListGroup.POST("/add-to-wish-list", middleware.Auth, wishListCtrl.AddToWishList)
+		wishListGroup.GET("/get-wish-list", middleware.Auth, wishListCtrl.GetWishList)
+		wishListGroup.DELETE("/remove-from-wish-list/:itemId", middleware.Auth, wishListCtrl.RemoveFromWishList)
+		wishListGroup.DELETE("/clean-wish-list", middleware.Auth, wishListCtrl.CleanWishList)
+	}
+
 	orderGroup := r.Group("/order")
 	{
 		orderGroup.POST("/place-order", middleware.Auth, orderCtrl.PlaceOrder)
