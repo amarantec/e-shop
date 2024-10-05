@@ -11,6 +11,7 @@ type WishListRepository interface {
 	CleanWishList(ctx context.Context, userId uint) (bool, error)
 	GetWishList(ctx context.Context, userId uint) ([]wishlistmodel.WishList, error)
 	RemoveFromWishList(ctx context.Context, userId, itemId uint) (bool, error)
+	GetWishListCount(ctx context.Context, userId uint) (int64, error)
 }
 
 type wishListRepository struct{}

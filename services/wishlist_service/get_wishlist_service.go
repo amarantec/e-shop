@@ -18,8 +18,10 @@ func (s wishListService) GetWishList(ctx context.Context, userId uint) (models.R
 		return response, err
 	}
 
+	count, _ := s.wishListRepo.GetWishListCount(ctx, userId)
+
 	wishListResponse := wishlistmodel.WishListResponse{
-		QuantityItems: 1,
+		QuantityItems: count,
 		Products:      []wishlistmodel.WishListProductResponse{},
 	}
 
